@@ -22,10 +22,13 @@ typedef enum comparator {
 
 typedef struct condition {
     Operation operation;
+    int parameter;
     Comparator comparator;
     int result;
     char * message;
 } Condition;
+
+void setDefaultConditions(Condition *condition);
 
 void allocateFizzBuzzTable(char *table);
 
@@ -34,20 +37,40 @@ int main() {
 
     Condition fizzBuzzConditions[DEFAULT_CONDITION_LENGTH];
 
-    fizzBuzzConditions[0].operation = MOD;
-    fizzBuzzConditions[0].comparator = EQ;
-    fizzBuzzConditions[0].result = 0;
-    fizzBuzzConditions[0].message = 'Fizz';
-
+    setDefaultConditions(fizzBuzzConditions);
 //    allocateFizzBuzzTable(FizzBuzzTable);
 
     printf("Hello, World!\n");
     printf("%d", fizzBuzzConditions[0].operation);
+    printf("%d", fizzBuzzConditions[0].parameter);
     printf("%d", fizzBuzzConditions[0].comparator);
     printf("%d", fizzBuzzConditions[0].result);
+    printf("%s", fizzBuzzConditions[0].message);
+
+    printf("%d", fizzBuzzConditions[1].operation);
+    printf("%d", fizzBuzzConditions[1].parameter);
+    printf("%d", fizzBuzzConditions[1].comparator);
+    printf("%d", fizzBuzzConditions[1].result);
+    printf("%s", fizzBuzzConditions[1].message);
     return 0;
 }
 
 void allocateFizzBuzzTable(char *table) {
     table = realloc(table, DEFAULT_LENGTH * sizeof(table));
+}
+
+void setDefaultConditions(Condition *condition) {
+    condition->operation = MOD;
+    condition->parameter = 3;
+    condition->comparator = EQ;
+    condition->result = 0;
+    condition->message = "Fizz";
+
+    condition++;
+
+    condition->operation = MOD;
+    condition->parameter = 5;
+    condition->comparator = EQ;
+    condition->result = 0;
+    condition->message = "Buzz";
 }
