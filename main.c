@@ -42,7 +42,7 @@ void allocateFizzBuzzTable(char *table);
 
 void iterateConditionsOnTable(char *table, Condition *conditions);
 
-char *runCondition(int i, Condition *conditions);
+const char *runCondition(int number, Condition *conditions);
 
 /******* PROTOTYPES *******/
 
@@ -60,17 +60,6 @@ int main() {
 
     iterateConditionsOnTable(fizzBuzzTable, fizzBuzzConditions);
 
-    printf("%d", fizzBuzzConditions[0].operation);
-    printf("%d", fizzBuzzConditions[0].parameter);
-    printf("%d", fizzBuzzConditions[0].comparator);
-    printf("%d", fizzBuzzConditions[0].result);
-    printf("%s", fizzBuzzConditions[0].message);
-
-    printf("%d", fizzBuzzConditions[1].operation);
-    printf("%d", fizzBuzzConditions[1].parameter);
-    printf("%d", fizzBuzzConditions[1].comparator);
-    printf("%d", fizzBuzzConditions[1].result);
-    printf("%s", fizzBuzzConditions[1].message);
     return 0;
 }
 
@@ -101,27 +90,29 @@ void setDefaultConditions(Condition *condition) {
 }
 
 void iterateConditionsOnTable(char *table, Condition *conditions) {
-    int i = 0;
+    int i = 1;
     char *result;
 
-    printf("%s", conditions->message);
-
     for(;i < DEFAULT_LENGTH; ++i){
-        result = runCondition(i, conditions);
-        printf("%s \n", result);
+        printf("%s \n", runCondition(i, conditions));
     }
 }
 
-char *runCondition(int number, Condition *conditions) {
+const char *runCondition(int number, Condition *conditions) {
     int i = 0;
     int result = 0;
+    int error = 0;
     char strNumber[12] = ""; //"char" size of every int number
-    char response[100] = "";
+    char *response;
+    response = malloc(sizeof(100));
 
     for(; i < DEFAULT_CONDITION_LENGTH; ++i){
         if(conditions->operation == NULL){
             break;
         }
+
+        result = 0;
+        memset(strNumber, 0, 12);
 
         switch(conditions->operation){
             case ADD:
@@ -140,7 +131,7 @@ char *runCondition(int number, Condition *conditions) {
                 result = number % conditions->parameter;
                 break;
             default:
-                result = NULL;
+                error = 1;
         }
 
         switch(conditions->comparator){
@@ -168,13 +159,16 @@ char *runCondition(int number, Condition *conditions) {
                 }
                 break;
         }
-        if(strNumber != NULL){
+        if(strNumber[0] != NULL){
             strcat(response, strNumber);
+        }
+        else {
+            error = 2;
         }
         conditions++;
     }
 
-    if(response == NULL){
+    if(error == 2 && response[0] == NULL){
         sprintf(strNumber, "%d", number);
         strcat(response, strNumber);
     }
