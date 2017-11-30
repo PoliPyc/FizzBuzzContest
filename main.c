@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define DEFAULT_LENGTH 100
 #define DEFAULT_CONDITION_LENGTH 10
@@ -39,9 +40,9 @@ void setDefaultConditions(Condition *condition);
 
 void allocateFizzBuzzTable(char *table);
 
-void iterateConditionsOnTable(char *table);
+void iterateConditionsOnTable(char *table, Condition *conditions);
 
-char *runCondition(int i);
+char *runCondition(int i, Condition *conditions);
 
 /******* PROTOTYPES *******/
 
@@ -49,7 +50,7 @@ char *runCondition(int i);
 /******* MAIN *******/
 
 int main() {
-    char FizzBuzzTable[DEFAULT_LENGTH];
+    char fizzBuzzTable[DEFAULT_LENGTH];
 
     Condition fizzBuzzConditions[DEFAULT_CONDITION_LENGTH];
 
@@ -57,7 +58,8 @@ int main() {
 
 //    allocateFizzBuzzTable(FizzBuzzTable);
 
-    printf("Hello, World!\n");
+    iterateConditionsOnTable(fizzBuzzTable, fizzBuzzConditions);
+
     printf("%d", fizzBuzzConditions[0].operation);
     printf("%d", fizzBuzzConditions[0].parameter);
     printf("%d", fizzBuzzConditions[0].comparator);
@@ -98,16 +100,85 @@ void setDefaultConditions(Condition *condition) {
     condition->message = "Buzz";
 }
 
-void iterateConditionsOnTable(char *table) {
+void iterateConditionsOnTable(char *table, Condition *conditions) {
     int i = 0;
     char *result;
+
+    printf("%s", conditions->message);
+
     for(;i < DEFAULT_LENGTH; ++i){
-        result = runCondition(i);
+        result = runCondition(i, conditions);
+        printf("%s \n", result);
     }
 }
 
-char *runCondition(int i) {
-    return NULL;
+char *runCondition(int number, Condition *conditions) {
+    int i = 0;
+    int result = 0;
+    char strNumber[12] = ""; //"char" size of every int number
+    char response[100] = "";
+
+    for(; i < DEFAULT_CONDITION_LENGTH; ++i){
+        if(conditions->operation == NULL){
+            break;
+        }
+
+        switch(conditions->operation){
+            case ADD:
+                result = number + conditions->parameter;
+                break;
+            case SUB:
+                result = number - conditions->parameter;
+                break;
+            case MUL:
+                result = number * conditions->parameter;
+                break;
+            case DIV:
+                result = number / conditions->parameter;
+                break;
+            case MOD:
+                result = number % conditions->parameter;
+                break;
+            default:
+                result = NULL;
+        }
+
+        switch(conditions->comparator){
+            case EQ:
+                if(result == conditions->result) {
+                    strcpy(strNumber, conditions->message);
+                }
+                break;
+
+            case NEQ:
+                if(result != conditions->result) {
+                    strcpy(strNumber, conditions->message);
+                }
+                break;
+
+            case LES:
+                if(result < conditions->result) {
+                    strcpy(strNumber, conditions->message);
+                }
+                break;
+
+            case GRT:
+                if(result > conditions->result) {
+                    strcpy(strNumber, conditions->message);
+                }
+                break;
+        }
+        if(strNumber != NULL){
+            strcat(response, strNumber);
+        }
+        conditions++;
+    }
+
+    if(response == NULL){
+        sprintf(strNumber, "%d", number);
+        strcat(response, strNumber);
+    }
+    return response;
 }
 
 /******* FUNCTIONS *******/
