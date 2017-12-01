@@ -92,9 +92,13 @@ void setDefaultConditions(Condition *condition) {
 void iterateConditionsOnTable(char *table, Condition *conditions) {
     int i = 1;
     char *result;
+    const char *pRunCondition = runCondition(i, conditions);
 
-    for(;i < DEFAULT_LENGTH; ++i){
-        printf("%s \n", runCondition(i, conditions));
+
+    for(;i <= DEFAULT_LENGTH; ++i){
+        if(printf("%s \n", runCondition(i, conditions))){
+            free(pRunCondition);
+        }
     }
 }
 
